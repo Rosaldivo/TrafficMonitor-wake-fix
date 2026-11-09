@@ -11,8 +11,12 @@ void CWin11TaskbarDlg::AdjustTaskbarWndPos(bool force_adjust)
     //设置窗口大小
     m_rect.right = m_rect.left + m_window_width;
     m_rect.bottom = m_rect.top + m_window_height;
-    if (force_adjust || m_rcNotify.Width() != m_last_notify_width || m_rcStart.left != m_last_start_pos)   //如果最小化窗口的宽度改变了，重新设置任务栏窗口的位置
+    //Local patch: on a vertical taskbar the window sits just above the notification area, so it must follow the area's top edge
+    const bool vertical_taskbar = m_rcTaskbar.Height() > m_rcTaskbar.Width();
+    if (force_adjust || m_rcNotify.Width() != m_last_notify_width || m_rcStart.left != m_last_start_pos
+        || (vertical_taskbar && m_rcNotify.top != m_last_notify_top))   //如果最小化窗口的宽度改变了，重新设置任务栏窗口的位置
     {
+        m_last_notify_top = m_rcNotify.top;
         m_last_notify_width = m_rcNotify.Width();
         m_last_start_pos = m_rcStart.left;
         //任务窗口显示在右侧时，或者Windows11下任务栏左对齐时
@@ -75,7 +79,10 @@ void CWin11TaskbarDlg::AdjustTaskbarWndPos(bool force_adjust)
         //注：这里加上(m_rcTaskbar.Height() - rcStart.Height())用于修正Windows11 build 22621版本后触屏设备任务栏窗口位置不正确的问题。
         //在这种情况下m_rcTaskbar的高度要大于m_rcBar的高度，正常情况下，它们的高度相同
         //但是当任务栏上没有任何图标时，m_rcBar的高度会变为0，因此使用rcStart代替
-        m_rect.MoveToY((m_rcStart.Height() - m_rect.Height()) / 2 + (m_rcTaskbar.Height() - m_rcStart.Height()) + DPI(theApp.m_taskbar_data.window_offset_top));
+        if (vertical_taskbar)
+            m_rect.MoveToY(m_rcNotify.top - m_rcTaskbar.top - m_rect.Height() + DPI(theApp.m_taskbar_data.window_offset_top));
+        else
+            m_rect.MoveToY((m_rcStart.Height() - m_rect.Height()) / 2 + (m_rcTaskbar.Height() - m_rcStart.Height()) + DPI(theApp.m_taskbar_data.window_offset_top));
         ////确保垂直方向不超出屏幕边界
         //if (m_rect.top < 0)
         //    m_rect.MoveToY(0);

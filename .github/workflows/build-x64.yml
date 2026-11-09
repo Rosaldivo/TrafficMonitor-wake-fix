@@ -1,0 +1,26 @@
+name: Build x64 Lite
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  x64_build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Run msbuild
+      run: msbuild TrafficMonitor_Lite.sln -p:configuration="Release (lite)" -p:platform=x64 -p:platformToolset=v143
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: TrafficMonitor_x64_lite
+        path: |
+          Bin/x64/Release (lite)/TrafficMonitor.exe
+          Bin/x64/Release (lite)/*.dll

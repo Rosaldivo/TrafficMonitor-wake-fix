@@ -18,6 +18,7 @@ private:
     CRect m_rcStart;     //开始按钮的矩形区域
     int m_last_notify_width{};
     int m_last_start_pos{};
+    int m_last_notify_top{};    //vertical taskbar: top of the notification area when the window was last positioned
 
     // 通过 CTaskBarDlg 继承
     void CheckTaskbarOnTopOrBottom() override;

@@ -242,10 +242,11 @@ void TaskBarSettingData::ValidVerticalMargin()
 
 void TaskBarSettingData::ValidWindowOffsetTop()
 {
-    if (window_offset_top < -20)
-        window_offset_top = -20;
-    if (window_offset_top > 20)
-        window_offset_top = 20;
+    //Local patch: the offset is measured from the tray on a vertical taskbar and needs a wide range
+    if (window_offset_top < -2000)
+        window_offset_top = -2000;
+    if (window_offset_top > 2000)
+        window_offset_top = 2000;
 }
 
 void TaskBarSettingData::ValidWindowOffsetLeft()
