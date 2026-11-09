@@ -22,5 +22,5 @@ jobs:
       with:
         name: TrafficMonitor_x64_lite
         path: |
-          Bin/x64/Release (lite)/TrafficMonitor.exe
-          Bin/x64/Release (lite)/*.dll
+          TrafficMonitor/Bin/x64/Release (lite)/TrafficMonitor.exe
+          TrafficMonitor/Bin/x64/Release (lite)/*.dll
